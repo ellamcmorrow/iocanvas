@@ -1,0 +1,15 @@
+{
+  "name": "iochat",
+  "version": "1.0.0",
+  "description": "Canvas",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ella Mc Morrow",
+  "license": "MIT",
+  "dependencies" : {
+  	"socket.io" :"*",
+  	"express" :"*"
+  }
+}

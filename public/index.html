@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Sockets Example</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+
+	<!--dependencies-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+	<script src="libraries/p5.dom.js" type="text/javascript"></script>
+	<script src="libraries/fontawesome-all.js" type="text/javascript"></script>
+	<script src="sketch.js" type="text/javascript"></script>
+
+
+
+	<style>
+	body {
+
+		padding-bottom: 10px;
+		font-family: 'Roboto Mono', monospace;
+		color:black;	}
+
+		canvas {
+			border-radius: 12px;
+		}
+		#userFormArea{
+			margin-top: 150px;
+			margin-right: 10px;
+
+		}
+		#messageArea{
+			margin-top: 150px;
+			margin-right: 10px;
+			position:fixed;
+			display: none;
+
+
+		}
+		.container{
+			margin-left: 0px;
+
+		}
+		.enter-btn{
+			margin-top:24.5px;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<div id="userFormArea" class="row">
+			<div class="col-md-3">
+				<form id="userForm" action="">
+					<div class="input-group">
+						<label>Enter a username!</label>
+						<input class="col-md-2  form-control" id="username"/>
+						<span class="input-group-btn">
+							<button type="submit" class="enter-btn btn btn-default"/><i class="fas fa-sign-in-alt"></i></span>
+						</div>
+					</div>
+				</form>
+			</div>
+		<div id="messageArea">
+			<b>Online Users</b>
+			<ul class="list-group" id="users"></ul>
+		</div>
+	</div>
+
+</body>
+<script>
+	$(function(){
+		var socket = io.connect();
+		var $userFormArea = $('#userFormArea');
+		var $userForm = $('#userForm');
+		var $messageArea = $('#messageArea');
+		var $users = $('#users');
+		var $username = $('#username');
+
+
+		$userForm.submit(function(e){
+			e.preventDefault();
+			console.log("Submitted.")
+          //emit new user data
+          //passing in user name data 
+          socket.emit('new user', $username.val(), function(data){
+          	if(data){ //if the user enters data the userform area is hidden
+          		$userFormArea.hide();   
+          		$messageArea.show(); //show online users
+          	  //  $username.val().show();		
+          	}
+          });
+          //clear message div once emitted
+          $username.val('');
+      });
+		//holds all the username data in an array
+		socket.on('get users', function(data){
+			var html = ''; //initially no users
+			for(i=0; i<data.length; i++){
+				html += '<li class="list-group-item">'+data[i]+'</li>' //append the list of users to the html
+			}
+			$users.html(html); //add the users to html 
+		})
+	});
+
+
+</script>
+
+
+</body>
+</script>
+</html>
